@@ -19,6 +19,8 @@ let invaderSpeed = 1;
 
 let playerLives, score, win;
 
+let init = false;
+
 function preload() {
 	invaderImg = loadImage("/src/assets/sprites/invader.png");
 	invader2Img = loadImage("/src/assets/sprites/invader2.png");
@@ -68,104 +70,121 @@ function setup() {
 
 function draw() {
 
-	frameCount++;
-
-	//Lógica
-	if (keyIsDown(LEFT_ARROW)) {
-		player.move(-scale);
-	} else if (keyIsDown(RIGHT_ARROW)) {
-		player.move(scale);
-	}
-	player.update(frameCount);
-
-	for (let bullet of invaderBullets) {
-		bullet.update(frameCount);
-		if (!player.invincible && player.intersects(bullet)) {
-			bullet.deadMarked = true;
-			gameOver();
-		}
-	}
-
-	for (let invader of invaders) {
-		invader.update(frameCount);
-		bullets.forEach(bullet => {
-			if (bullet.intersects(invader)) {
-				score += floor((1 / MOVE_INTERVAL) * 300);
-				if (invader.img === invader2Img) score += 10;
-				MOVE_INTERVAL -= 0.1;
-				bullet.deadMarked = true;
-				invader.deadMarked = true;
-			}
-		});
-	}
-	for (let bullet of bullets) {
-		bullet.update(frameCount);
-	}
-	if (invaders.some(invader => invader.right() >= width || invader.left() <= 0))
-		invaders.forEach(invader => {
-			invader.pos.add(p5.Vector.mult(invader.vel, -1));
-			invader.pos.y += scale * 5;
-			invader.vel.x = -invader.vel.x;
-		});
-
-	//Eliminar balas e invaders
-	bullets = bullets.filter(bullet => !bullet.deadMarked && bullet.lower() >= 0);
-	invaderBullets = invaderBullets.filter(bullet => !bullet.deadMarked && bullet.upper() <= height);
-	invaders = invaders.filter(invader => !invader.deadMarked);
-
-	if (invaders.length == 0) {
-		win = true;
-	}
-
-	//draw
 	background(0);
 
-	for (let invader of invaders) {
-		invader.draw();
-	}
-	for (let bullet of bullets) {
-		bullet.draw();
-	}
-	for (let bullet of invaderBullets) {
-		bullet.draw();
-	}
-	player.draw();
+	if (init) {
+		frameCount++;
 
-	noStroke();
-	fill(255);
-	textSize(28);
-	textAlign(LEFT, TOP);
-	text(`Lives ${playerLives}`, 0, 0);
-	textAlign(RIGHT, TOP);
-	fill(win ? 0 : 255, 255, win ? 0 : 255)
-	text(`${score}`, width, 0);
+		//Lógica
+		if (keyIsDown(LEFT_ARROW)) {
+			player.move(-scale);
+		} else if (keyIsDown(RIGHT_ARROW)) {
+			player.move(scale);
+		}
+		player.update(frameCount);
 
-	if (playerLives < 0) {
-		textAlign(CENTER, CENTER);
-		textSize(64);
-		text("GAME OVER", width / 2, height / 2);
-	}
+		for (let bullet of invaderBullets) {
+			bullet.update(frameCount);
+			if (!player.invincible && player.intersects(bullet)) {
+				bullet.deadMarked = true;
+				gameOver();
+			}
+		}
 
-	if (win) {
-		score += playerLives * 100;
+		for (let invader of invaders) {
+			invader.update(frameCount);
+			bullets.forEach(bullet => {
+				if (bullet.intersects(invader)) {
+					score += floor((1 / MOVE_INTERVAL) * 300);
+					if (invader.img === invader2Img) score += 10;
+					MOVE_INTERVAL -= 0.1;
+					bullet.deadMarked = true;
+					invader.deadMarked = true;
+				}
+			});
+		}
+		for (let bullet of bullets) {
+			bullet.update(frameCount);
+		}
+		if (invaders.some(invader => invader.right() >= width || invader.left() <= 0))
+			invaders.forEach(invader => {
+				invader.pos.add(p5.Vector.mult(invader.vel, -1));
+				invader.pos.y += scale * 5;
+				invader.vel.x = -invader.vel.x;
+			});
+
+		//Eliminar balas e invaders
+		bullets = bullets.filter(bullet => !bullet.deadMarked && bullet.lower() >= 0);
+		invaderBullets = invaderBullets.filter(bullet => !bullet.deadMarked && bullet.upper() <= height);
+		invaders = invaders.filter(invader => !invader.deadMarked);
+
+		if (invaders.length == 0) {
+			win = true;
+		}
+
+		//draw
+
+		for (let invader of invaders) {
+			invader.draw();
+		}
+		for (let bullet of bullets) {
+			bullet.draw();
+		}
+		for (let bullet of invaderBullets) {
+			bullet.draw();
+		}
+		player.draw();
+
+		noStroke();
+		fill(255);
+		textSize(28);
+		textAlign(LEFT, TOP);
+		text(`Lives ${playerLives}`, 0, 0);
 		textAlign(RIGHT, TOP);
 		fill(win ? 0 : 255, 255, win ? 0 : 255)
+		text(`${score}`, width, 0);
 
-		textAlign(CENTER, CENTER);
-		textSize(64);
-		text("YOU WIN", width / 2, height / 2);
+		if (playerLives < 0) {
+			textAlign(CENTER, CENTER);
+			textSize(64);
+			text("GAME OVER", width / 2, height / 2);
+		}
 
-		noLoop();
+		if (win) {
+			score += playerLives * 100;
+			textAlign(RIGHT, TOP);
+			fill(win ? 0 : 255, 255, win ? 0 : 255)
+
+			textAlign(CENTER, CENTER);
+			textSize(64);
+			text("YOU WIN", width / 2, height / 2);
+
+			noLoop();
+		}
+	}else {
+		textSize(20);
+		fill("RED");
+		textStyle(BOLD);
+		textAlign(CENTER);
+		text("Presiona enter para iniciar", width/2 , height/2 - 20);
+		text("<- Izquierda, -> Derecha", width/2 , height/2 );
+		text("barra espaciadora - Disparo", width/2 , height/2 + 20);
+		text("r - resetear", width/2 , height/2 + 40);
 	}
+
 }
 
 function keyPressed() {
-	if (keyCode === UP_ARROW) {
+	if (keyCode === 32) {
 		player.shoot();
 	}
 
 	if (key === 'r') {
 		restart();
+	}
+
+	if (keyCode === ENTER) {
+		init = true;
 	}
 }
 
