@@ -168,7 +168,7 @@ function draw() {
 		textAlign(CENTER);
 		text("Presiona enter para iniciar", width/2 , height/2 - 20);
 		text("<- Izquierda, -> Derecha", width/2 , height/2 );
-		text("barra espaciadora - Disparo", width/2 , height/2 + 20);
+		text("Barra espaciadora - Disparo", width/2 , height/2 + 20);
 		text("r - resetear", width/2 , height/2 + 40);
 	}
 
