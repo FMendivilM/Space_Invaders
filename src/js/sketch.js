@@ -22,14 +22,14 @@ let playerLives, score, win;
 let init = false;
 
 function preload() {
-	invaderImg = loadImage("/src/assets/sprites/invader.png");
-	invader2Img = loadImage("/src/assets/sprites/invader2.png");
-	spaceshipImg = loadImage("/src/assets/sprites/spaceship.png");
-	bulletImg = loadImage("/src/assets/sprites/bullet.png");
-	bullet2Img = loadImage("/src/assets/sprites/bullet2.png");
+	invaderImg = loadImage("src/assets/sprites/invader.png");
+	invader2Img = loadImage("src/assets/sprites/invader2.png");
+	spaceshipImg = loadImage("src/assets/sprites/spaceship.png");
+	bulletImg = loadImage("src/assets/sprites/bullet.png");
+	bullet2Img = loadImage("src/assets/sprites/bullet2.png");
 
 	//"cosmic alien" font
-	invaderFont = loadFont("/src/assets/fonts/ca.ttf");
+	invaderFont = loadFont("src/assets/fonts/ca.ttf");
 }
 
 function setup() {
